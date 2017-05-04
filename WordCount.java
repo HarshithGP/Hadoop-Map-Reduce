@@ -1,9 +1,8 @@
 /* 
 
-Map reducer Inverted Indexer
-CSCI 571 - Information Retrieval and Web Search Engines
-HW 3 - Hadoop Map Reduction
-SPRING 2017
+Map reduction - Inverted Indexer
+Information Retrieval and Web Search Engines
+Hadoop Map Reduction
 
 */
 
@@ -36,14 +35,14 @@ public class WordCount
         			//store the docID after splitting full filename
         			Text docID = new Text(fileName.split("\\.")[0]);
 
-  			StringTokenizer itr_var = new StringTokenizer(value.toString());
-       	 		while (itr_var.hasMoreTokens()) 
-       	 		{
+  			        StringTokenizer itr_var = new StringTokenizer(value.toString());
+       	 		  while (itr_var.hasMoreTokens()) 
+       	 		  {
               			word.set(itr_var.nextToken());
               			//store docID with each word
               			context.write(word, docID);
                			// context.write(word, new IntWritable(Integer.parseInt(docID)));
-            			}
+            		}
         		} 
    	} 
 
@@ -61,8 +60,8 @@ public class WordCount
 
      		 	for (Text value : values) 
      		 	{
-                    Integer v = Integer.parseInt(value.toString());    
-                    IntWritable val = new IntWritable(v);
+            Integer v = Integer.parseInt(value.toString());    
+            IntWritable val = new IntWritable(v);
        			 	if(wordCounter.containsKey(val.get()))
         				// if the integer doc id is already present
           					wordCounter.put(val.get(), wordCounter.get(val.get()) + 1);
@@ -78,8 +77,8 @@ public class WordCount
         				output = output + docID.toString() + ":" + counts.toString() + "\t";
       			}
      		
-     		 	//result.set(countString.trim());
-     		 	// context.write(key, result);
+     		 	result.set(countString.trim());
+     		 	context.write(key, result);
       			context.write(key, new Text(output.trim()));
     		}
   	}
@@ -91,10 +90,10 @@ public class WordCount
     		job.setJarByClass(WordCount.class);
     		job.setMapperClass(TokenizerMapper.class);
 
-    		//job.setCombinerClass(IntSumReducer.class);
+    		job.setCombinerClass(IntSumReducer.class);
     		job.setReducerClass(IntSumReducer.class);    
-    		// job.setMapOutputKeyClass(Text.class);
-    		// job.setMapOutputValueClass(IntWritable.class);
+    		job.setMapOutputKeyClass(Text.class);
+    		ob.setMapOutputValueClass(IntWritable.class);
     		job.setOutputKeyClass(Text.class);
     		job.setOutputValueClass(Text.class);
     		FileInputFormat.addInputPath(job, new Path(args[0]));
